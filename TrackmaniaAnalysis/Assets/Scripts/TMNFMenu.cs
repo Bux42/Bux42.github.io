@@ -64,7 +64,9 @@ public class TMNFMenu : MonoBehaviour
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get("https://tmnforever.tm-exchange.com/main.aspx?action=tracksearch&mode=1&id=1001"))
         {
+            webRequest.SetRequestHeader("Access-Control-Allow-Origin", "*");
             // Request and wait for the desired page.
+
             yield return webRequest.SendWebRequest();
 
             if (webRequest.isNetworkError)
