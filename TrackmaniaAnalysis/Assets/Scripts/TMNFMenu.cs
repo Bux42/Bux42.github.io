@@ -29,6 +29,53 @@ public class TMNFMenu : MonoBehaviour
 
         NadeoTracksButton.onClick.AddListener(NadeoTracksButtonClick);
         ClassicTracksButton.onClick.AddListener(ClassicTracksButtonClick);
+
+        StartCoroutine(test());
+    }
+
+    IEnumerator test()
+    {
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(""))
+        {
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.isNetworkError)
+            {
+
+            }
+            else
+            {
+                TMNFListControls listControls = ScrollList.GetComponent<TMNFListControls>();
+                listControls.ClearItems();
+                int i = 0;
+                Color[] colors = {
+                    new Color(.1f, .1f, .1f),
+                    new Color(.15f, .15f, .15f)
+                };
+
+                Debug.Log(webRequest.downloadHandler.text);
+                TMNFTrackList tMNFTrackList = JsonUtility.FromJson<TMNFTrackList>(webRequest.downloadHandler.text);
+                tMNFTrackList.Tracks = tMNFTrackList.Tracks.OrderBy(x => x.TrackName).ToList();
+                foreach (var track in tMNFTrackList.Tracks)
+                {
+                    TMNFTrack tMNFTrack = new TMNFTrack()
+                    {
+                        BestTime = track.WRTime,
+                        BestTimeAuthor = track.WRAuthor,
+                        TrackId = track.TrackId,
+                        TrackName = track.TrackName,
+                        TrackAuthor = track.TrackAuthor
+                    };
+                    listControls.AddItem(tMNFTrack, colors[i % 2]);
+                    i++;
+                }
+
+                LoadingImage.gameObject.SetActive(false);
+                SearchResultsImage.gameObject.SetActive(true);
+                NadeoTracksButton.enabled = true;
+                ClassicTracksButton.enabled = true;
+            }
+        }
     }
 
     void Update()

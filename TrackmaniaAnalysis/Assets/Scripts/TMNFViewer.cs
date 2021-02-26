@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class TMNFViewer : MonoBehaviour
 {
     public GameObject MapBlockTextTemplate;
+    public Button BackButton;
 
     public float RightClickSpeedH = 2.0f;
     public float RightClickSpeedV = 2.0f;
@@ -14,6 +17,9 @@ public class TMNFViewer : MonoBehaviour
     void Start()
     {
         DataManager.PreviousScenes.Add(SceneManager.GetActiveScene().name);
+
+        BackButton.onClick.AddListener(BackButtonClick);
+
         if (DataManager.TMNFMap != null)
         {
             LoadMapBlocks();
@@ -45,6 +51,12 @@ public class TMNFViewer : MonoBehaviour
                 mesh.transform.eulerAngles = Camera.main.transform.eulerAngles;
             }
         }
+    }
+
+    void BackButtonClick()
+    {
+        DataManager.PreviousScenes.Remove(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(DataManager.PreviousScenes.Last());
     }
 
     void LoadMapBlocks()
