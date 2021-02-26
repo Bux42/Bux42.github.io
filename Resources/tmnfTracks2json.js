@@ -6,7 +6,7 @@ var tr1 = document.getElementsByClassName("WindowTableCell1");
 var tr2 = document.getElementsByClassName("WindowTableCell2");
 
 var trAll = [];
-var wgetQueries = "";
+var curlQueries = "";
 
 var json = {"Tracks": []};
 
@@ -28,7 +28,7 @@ for (var i = 0; i < trAll.length; i++) {
     var wrTime = tds[6].innerText;
     var wrAuthor = tds[7].getElementsByTagName("a")[2].innerText;
 
-    wgetQueries +=  "curl '" + downloadBase + trackId + "' > '" + trackName.replace("'", "\'") + "_" + trackId + ".gbx' ;"
+    curlQueries +=  "curl '" + downloadBase + trackId + "' > '" + trackName.replace("'", "\'") + "_" + trackId + ".gbx' ;"
     json["Tracks"].push({
         TrackName: trackName,
         TrackAuthor: trackAuthor,
@@ -39,4 +39,4 @@ for (var i = 0; i < trAll.length; i++) {
 }
 
 console.log(JSON.stringify(json));
-console.log(wgetQueries);
+console.log(curlQueries);
