@@ -49,7 +49,7 @@ public class TMNFMenu : MonoBehaviour
         NadeoTracksButton.enabled = false;
         ClassicTracksButton.enabled = false;
 
-        StartCoroutine(NadeoTracksRequest());
+        StartCoroutine(TMNFTrackRequest("https://raw.githubusercontent.com/Bux42/Bux42.github.io/main/Data/TrackLists/TMNF/NadeoTracks.json"));
     }
     void ClassicTracksButtonClick()
     {
@@ -58,15 +58,13 @@ public class TMNFMenu : MonoBehaviour
         LoadingImage.gameObject.SetActive(true);
         NadeoTracksButton.enabled = false;
         ClassicTracksButton.enabled = false;
+        StartCoroutine(TMNFTrackRequest("https://raw.githubusercontent.com/Bux42/Bux42.github.io/main/Data/TrackLists/TMNF/ClassicTracks.json"));
     }
 
-    IEnumerator NadeoTracksRequest()
+    IEnumerator TMNFTrackRequest(string url)
     {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get("https://tmnforever.tm-exchange.com/main.aspx?action=tracksearch&mode=1&id=1001"))
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
-            webRequest.SetRequestHeader("Access-Control-Allow-Origin", "*");
-            // Request and wait for the desired page.
-
             yield return webRequest.SendWebRequest();
 
             if (webRequest.isNetworkError)
@@ -76,42 +74,29 @@ public class TMNFMenu : MonoBehaviour
             else
             {
                 TMNFListControls listControls = ScrollList.GetComponent<TMNFListControls>();
-
-                Debug.Log(webRequest.downloadHandler.text);
-                string trPattern = @"<tr[\s\S]*?<\/tr>";
                 int i = 0;
                 Color[] colors = {
                     new Color(.1f, .1f, .1f),
                     new Color(.15f, .15f, .15f)
                 };
-                foreach (Match m in Regex.Matches(webRequest.downloadHandler.text, trPattern))
+
+                Debug.Log(webRequest.downloadHandler.text);
+                TMNFTrackList tMNFTrackList = JsonUtility.FromJson<TMNFTrackList>(webRequest.downloadHandler.text);
+
+                foreach (var track in tMNFTrackList.Tracks)
                 {
-                    if (m.Value.Contains("WindowTableCell"))
+                    TMNFTrack tMNFTrack = new TMNFTrack()
                     {
-                        string trackNamePattern = @"#auto"">(.*)<\/a><";
-                        string trackName = Regex.Match(m.Value, trackNamePattern).Groups[1].Value;
-
-                        string trackIdPattern = @"<a href=""main\.aspx\?action=trackshow&amp;id=(.*)#auto"" target=""_blank"">";
-                        int trackId = int.Parse(Regex.Match(m.Value, trackIdPattern).Groups[1].Value);
-
-                        string bestTimePattern = @"\d{1,}:\d{1,}.\d{1,}";
-                        string bestTime = Regex.Match(m.Value, bestTimePattern, RegexOptions.Multiline).Groups.SyncRoot.ToString();
-
-                        string bestTimeAuthorPattern = @"k"">(.*)<\/a><\/td><td><a OnMouseOver";
-                        string bestTimeAuthor = Regex.Match(m.Value, bestTimeAuthorPattern).Groups[1].Value;
-
-                        TMNFTrack track = new TMNFTrack()
-                        {
-                            BestTime = bestTime,
-                            BestTimeAuthor = bestTimeAuthor,
-                            TrackId = trackId,
-                            TrackName = trackName
-                        };
-                        listControls.AddItem(track, colors[i % 2]);
-                        Debug.Log(colors[i % 2]);
-                        i++;
-                    }
+                        BestTime = track.WRTime,
+                        BestTimeAuthor = track.WRAuthor,
+                        TrackId = track.TrackId,
+                        TrackName = track.TrackName,
+                        TrackAuthor = track.TrackAuthor
+                    };
+                    listControls.AddItem(tMNFTrack, colors[i % 2]);
+                    i++;
                 }
+
                 LoadingImage.gameObject.SetActive(false);
                 SearchResultsImage.gameObject.SetActive(true);
                 NadeoTracksButton.enabled = true;
