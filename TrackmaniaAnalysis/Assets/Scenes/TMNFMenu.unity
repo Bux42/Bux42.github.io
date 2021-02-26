@@ -908,7 +908,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 424.5, y: -507.5}
+  m_AnchoredPosition: {x: 558, y: -507.5}
   m_SizeDelta: {x: 500, y: 287}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &259219729
@@ -961,6 +961,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SquareImage: {fileID: 82780041}
+  LoadingText: {fileID: 12774143}
   speed: 0
 --- !u!114 &259219732
 MonoBehaviour:
@@ -1512,6 +1513,8 @@ MonoBehaviour:
   TrackAuthorText: {fileID: 138947942}
   BestTimeText: {fileID: 206492313}
   BestTimeAuthorText: {fileID: 143808179}
+  LoadingImage: {fileID: 259219729}
+  SearchResultsImage: {fileID: 1403141273}
 --- !u!1 &567745407
 GameObject:
   m_ObjectHideFlags: 0

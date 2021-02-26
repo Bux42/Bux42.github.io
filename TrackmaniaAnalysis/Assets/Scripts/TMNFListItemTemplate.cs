@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
@@ -17,6 +18,9 @@ public class TMNFListItemTemplate : MonoBehaviour, IPointerEnterHandler, IPointe
     private Text BestTimeText;
     [SerializeField]
     private Text BestTimeAuthorText;
+
+    public Image LoadingImage;
+    public Image SearchResultsImage;
 
     private Color BaseColor;
 
@@ -63,7 +67,24 @@ public class TMNFListItemTemplate : MonoBehaviour, IPointerEnterHandler, IPointe
             }
             else
             {
-                Debug.Log(webRequest.downloadHandler.text);
+                DataManager.TMNFMapGhosts.Clear();
+                LoadingImage.gameObject.SetActive(true);
+                
+                //Debug.Log(webRequest.downloadHandler.text);
+                for (int i = 0; i < TemplateTMNFTrack.ReplayFilesPath.Count; i++)
+                {
+                    LoadingImage.GetComponent<LoadingImage>().SetLoadingText($"{i + 1} / {TemplateTMNFTrack.ReplayFilesPath.Count} Ghosts loaded");
+                    string ghostUrl = $"https://raw.githubusercontent.com/Bux42/Bux42.github.io/main/Data/TrackReplays/TMNF/Json/{TemplateTMNFTrack.TrackName}_{TemplateTMNFTrack.TrackId}/{TemplateTMNFTrack.ReplayFilesPath[i]}";
+                    UnityWebRequest request = UnityWebRequest.Get(ghostUrl);
+                    yield return request.SendWebRequest();
+
+                    if (!request.isNetworkError)
+                    {
+                        //Debug.Log(request.downloadHandler.text);
+                        DataManager.TMNFMapGhosts.Add(JsonUtility.FromJson<TMNFSampleData>(request.downloadHandler.text));
+                    }
+                }
+                DataManager.TMNFMapGhosts = DataManager.TMNFMapGhosts.OrderBy(x => x.RaceTime).ToList();
                 DataManager.TMNFMap = JsonUtility.FromJson<ConvertedMapTMNF>(webRequest.downloadHandler.text);
                 SceneManager.LoadScene("TMNFViewer");
             }

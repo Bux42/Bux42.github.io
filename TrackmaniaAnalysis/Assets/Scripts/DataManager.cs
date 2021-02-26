@@ -7,4 +7,5 @@ public static class DataManager
 {
     public static List<string> PreviousScenes = new List<string>();
     public static ConvertedMapTMNF TMNFMap = null;
+    internal static List<TMNFSampleData> TMNFMapGhosts = new List<TMNFSampleData>();
 }

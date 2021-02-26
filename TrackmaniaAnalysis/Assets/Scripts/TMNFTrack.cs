@@ -9,4 +9,5 @@ public class TMNFTrack
     public int TrackId;
     public string BestTime;
     public string BestTimeAuthor;
+    public List<string> ReplayFilesPath = new List<string>();
 }
