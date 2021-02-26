@@ -4,10 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class TMNFListItemTemplate : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class TMNFListItemTemplate : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField]
     private Text TrackNameText;
+    [SerializeField]
+    private Text TrackAuthorText;
     [SerializeField]
     private Text BestTimeText;
     [SerializeField]
@@ -24,8 +26,14 @@ public class TMNFListItemTemplate : MonoBehaviour, IPointerEnterHandler, IPointe
         BaseColor = color;
 
         TrackNameText.text = track.TrackName;
+        TrackAuthorText.text = track.TrackAuthor;
         BestTimeText.text = track.BestTime;
         BestTimeAuthorText.text = track.BestTimeAuthor;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+
     }
 
     public void OnPointerEnter(PointerEventData eventData)

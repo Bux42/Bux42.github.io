@@ -7,6 +7,8 @@ public class TMNFListControls : MonoBehaviour
 {
     [SerializeField]
     private GameObject ListItemTemplate;
+
+    private List<GameObject> ListItems = new List<GameObject>();
     void Start()
     {
         
@@ -19,6 +21,16 @@ public class TMNFListControls : MonoBehaviour
         itemTemplate.GetComponent<Image>().color = color;
         itemTemplate.GetComponent<TMNFListItemTemplate>().InitTMNFTrack(track, color);
         itemTemplate.transform.SetParent(ListItemTemplate.transform.parent, false);
+        ListItems.Add(itemTemplate);
+    }
+
+    public void ClearItems()
+    {
+        foreach (var item in ListItems)
+        {
+            Destroy(item.gameObject);
+        }
+        ListItems.Clear();
     }
 
 }

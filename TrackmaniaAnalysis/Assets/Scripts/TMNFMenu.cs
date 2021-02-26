@@ -74,6 +74,7 @@ public class TMNFMenu : MonoBehaviour
             else
             {
                 TMNFListControls listControls = ScrollList.GetComponent<TMNFListControls>();
+                listControls.ClearItems();
                 int i = 0;
                 Color[] colors = {
                     new Color(.1f, .1f, .1f),
@@ -82,7 +83,7 @@ public class TMNFMenu : MonoBehaviour
 
                 Debug.Log(webRequest.downloadHandler.text);
                 TMNFTrackList tMNFTrackList = JsonUtility.FromJson<TMNFTrackList>(webRequest.downloadHandler.text);
-
+                tMNFTrackList.Tracks = tMNFTrackList.Tracks.OrderBy(x => x.TrackName).ToList();
                 foreach (var track in tMNFTrackList.Tracks)
                 {
                     TMNFTrack tMNFTrack = new TMNFTrack()
