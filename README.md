@@ -24,14 +24,10 @@ You can play with the WebGL version here: https://bux42.github.io/TrackmaniaAnal
 (Pretty similar to TM official replay editor)
 
   
-
-|Move camera rotation| Hold Right Click + Drag |
-
+| Move camera rotation | Hold Right Click + Drag |
 |--|--|
+| Move Camera Around | Z S Q D Keys |
 
-|Move Camera Around| Z S Q D Keys |
-
-  
 
 ## Plans for the future
 Add interesting features & new ways to visualize stuff & allow users to give their own replay files to the tool
