@@ -11,6 +11,7 @@ public class Track
     public string TrackAuthor;
     public string WRTime;
     public string WRAuthor;
+    public List<string> ReplayFilesPath = new List<string>();
 }
 [Serializable]
 public class TMNFTrackList
