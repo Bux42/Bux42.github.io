@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using Assets.Scripts;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TMNFListItemTemplate : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
@@ -33,7 +36,8 @@ public class TMNFListItemTemplate : MonoBehaviour, IPointerEnterHandler, IPointe
 
     public void OnPointerClick(PointerEventData eventData)
     {
-
+        string url = $"https://raw.githubusercontent.com/Bux42/Bux42.github.io/main/Data/TrackMaps/TMNF/Json/{TemplateTMNFTrack.TrackName}_{TemplateTMNFTrack.TrackId}.json";
+        StartCoroutine(TMNFTrackJsonRequest(url));
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -45,5 +49,24 @@ public class TMNFListItemTemplate : MonoBehaviour, IPointerEnterHandler, IPointe
     public void OnPointerExit(PointerEventData eventData)
     {
         GetComponent<Image>().color = BaseColor;
+    }
+
+    IEnumerator TMNFTrackJsonRequest(string url)
+    {
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        {
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.isNetworkError)
+            {
+
+            }
+            else
+            {
+                Debug.Log(webRequest.downloadHandler.text);
+                DataManager.TMNFMap = JsonUtility.FromJson<ConvertedMapTMNF>(webRequest.downloadHandler.text);
+                SceneManager.LoadScene("TMNFViewer");
+            }
+        }
     }
 }

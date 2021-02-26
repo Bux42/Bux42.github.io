@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TMNFMenu.unity
     guid: 9060f1a2d2303a246bbd177a43ae5325
+  - enabled: 1
+    path: Assets/Scenes/TMNFViewer.unity
+    guid: 0389ec0a70a7e034cb05961cfa5543b6
   m_configObjects: {}
