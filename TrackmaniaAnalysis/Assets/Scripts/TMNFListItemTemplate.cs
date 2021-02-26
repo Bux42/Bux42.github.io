@@ -86,6 +86,7 @@ public class TMNFListItemTemplate : MonoBehaviour, IPointerEnterHandler, IPointe
                 }
                 DataManager.TMNFMapGhosts = DataManager.TMNFMapGhosts.OrderBy(x => x.RaceTime).ToList();
                 DataManager.TMNFMap = JsonUtility.FromJson<ConvertedMapTMNF>(webRequest.downloadHandler.text);
+                DataManager.TMNFMap.MapId = TemplateTMNFTrack.TrackName;
                 SceneManager.LoadScene("TMNFViewer");
             }
         }

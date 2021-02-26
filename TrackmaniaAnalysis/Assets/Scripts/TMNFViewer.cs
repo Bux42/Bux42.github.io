@@ -14,6 +14,8 @@ public class TMNFViewer : MonoBehaviour
     public Button RandomizeColorsButton;
     public GameObject GhostScrollList;
     public Slider LineThicknessSlider;
+    public Toggle ShowBlocksToggle;
+    public Text TrackNameText;
 
     public float RightClickSpeedH = 2.0f;
     public float RightClickSpeedV = 2.0f;
@@ -23,9 +25,14 @@ public class TMNFViewer : MonoBehaviour
     {
         DataManager.PreviousScenes.Add(SceneManager.GetActiveScene().name);
 
+        LineThicknessSlider.value = PlayerPrefs.GetFloat("LineThickness");
+
         BackButton.onClick.AddListener(BackButtonClick);
         RandomizeColorsButton.onClick.AddListener(RandomizeColorsButtonClick);
         LineThicknessSlider.onValueChanged.AddListener(LineThicknessSliderValueChanged);
+        ShowBlocksToggle.onValueChanged.AddListener(delegate {
+            ShowBlocksToggleValueChanged();
+        });
 
         GhostListControls ghostListControls = GhostScrollList.GetComponent<GhostListControls>();
 
@@ -45,7 +52,7 @@ public class TMNFViewer : MonoBehaviour
                 ghostData.LineRenderer.SetPosition(i, ghostData.Samples[i].Position);
             }
             ghostData.LineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-            ghostData.LineRenderer.SetWidth(1, 1);
+            ghostData.LineRenderer.SetWidth(PlayerPrefs.GetFloat("LineThickness"), PlayerPrefs.GetFloat("LineThickness"));
             float alpha = 0.5f;
             Gradient gradient = new Gradient();
             Color color = new Color(
@@ -65,6 +72,7 @@ public class TMNFViewer : MonoBehaviour
 
         if (DataManager.TMNFMap != null)
         {
+            TrackNameText.text = DataManager.TMNFMap.MapId;
             MapBlockTMNF startMapBlock = DataManager.TMNFMap.Blocks.Find(x => x.Name == "StadiumRoadMainStartLine");
             Vector3 posDiff = Vector3.zero;
 
@@ -79,8 +87,23 @@ public class TMNFViewer : MonoBehaviour
         }
     }
 
+    private void ShowBlocksToggleValueChanged()
+    {
+        if (ShowBlocksToggle.isOn)
+        {
+            foreach (var block in DataManager.TMNFMap.Blocks)
+                block.Text3D.SetActive(true);
+        }
+        else
+        {
+            foreach (var block in DataManager.TMNFMap.Blocks)
+                block.Text3D.SetActive(false);
+        }
+    }
+
     private void LineThicknessSliderValueChanged(float arg0)
     {
+        PlayerPrefs.SetFloat("LineThickness", LineThicknessSlider.value);
         foreach (var ghostData in DataManager.TMNFMapGhosts)
         {
             ghostData.LineRenderer.SetWidth(LineThicknessSlider.value, LineThicknessSlider.value);
@@ -95,14 +118,16 @@ public class TMNFViewer : MonoBehaviour
             RightClickPitch -= RightClickSpeedV * Input.GetAxis("Mouse Y");
             Camera.main.transform.eulerAngles = new Vector3(RightClickPitch, RightClickYaw, 0.0f);
         }
-        if (Input.GetKey(KeyCode.Z))
+        if (Input.GetKey(DataManager.MoveKeys[0]))
             Camera.main.transform.localPosition = Camera.main.transform.localPosition + Camera.main.transform.forward;
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(DataManager.MoveKeys[1]))
             Camera.main.transform.localPosition = Camera.main.transform.localPosition - Camera.main.transform.forward;
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(DataManager.MoveKeys[2]))
             Camera.main.transform.localPosition = Camera.main.transform.localPosition - Camera.main.transform.right;
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(DataManager.MoveKeys[3]))
             Camera.main.transform.localPosition = Camera.main.transform.localPosition + Camera.main.transform.right;
+
+        float test = Input.GetAxis("Vertical");
 
         if (DataManager.TMNFMap != null)
         {
@@ -125,7 +150,6 @@ public class TMNFViewer : MonoBehaviour
                       UnityEngine.Random.Range(0f, 1f),
                       UnityEngine.Random.Range(0f, 1f)
                   );
-
             gradient.SetKeys(
                 new GradientColorKey[] { new GradientColorKey(color, 0.0f), new GradientColorKey(color, 1.0f) },
                 new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }

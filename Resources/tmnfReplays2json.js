@@ -1,6 +1,6 @@
 var downloadBase = "https://tmnforever.tm-exchange.com/get.aspx?action=recordgbx&id=";
 
-var trackName = document.getElementById("ctl03_ShowTrackName").innerText;
+var trackName = document.getElementById("ctl03_ShowTrackName").innerText.replace("'", "");
 var trackId = document.getElementById("ctl03_DoDownload").href.split("id=")[1];
 console.log(trackId);
 
@@ -19,7 +19,7 @@ for (var i = 0; i < tr2.length; i++) {
 
 console.log(trAll);
 
-var curlHeader = "xd u thought";
+var curlHeader = "xd hi";
 var curlQueries = "";
 
 trAll.forEach(el => {
