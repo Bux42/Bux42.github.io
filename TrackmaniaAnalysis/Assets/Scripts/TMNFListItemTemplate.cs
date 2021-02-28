@@ -80,8 +80,10 @@ public class TMNFListItemTemplate : MonoBehaviour, IPointerEnterHandler, IPointe
 
                     if (!request.isNetworkError)
                     {
-                        //Debug.Log(request.downloadHandler.text);
-                        DataManager.TMNFMapGhosts.Add(JsonUtility.FromJson<TMNFSampleData>(request.downloadHandler.text));
+                        if (request.downloadHandler.text.Contains("PlayerName"))
+                            DataManager.TMNFMapGhosts.Add(JsonUtility.FromJson<TMNFSampleData>(request.downloadHandler.text));
+                        else
+                            Debug.Log($">>>>>>>>>>>>>>>>>ghostUrl ({ghostUrl}): {request.downloadHandler.text}");
                     }
                 }
                 DataManager.TMNFMapGhosts = DataManager.TMNFMapGhosts.OrderBy(x => x.RaceTime).ToList();
