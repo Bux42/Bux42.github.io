@@ -54,6 +54,8 @@ public class GhostListItemTemplate : MonoBehaviour, IPointerEnterHandler, IPoint
             new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
         );
         SampleData.LineRenderer.colorGradient = gradient;
+        Material mymat = SampleData.GhostCube.GetComponent<Renderer>().material;
+        mymat.color = new Color(SampleData.Color.r, SampleData.Color.g, SampleData.Color.b, alpha);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -65,5 +67,7 @@ public class GhostListItemTemplate : MonoBehaviour, IPointerEnterHandler, IPoint
             new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
         );
         SampleData.LineRenderer.colorGradient = gradient;
+        Material mymat = SampleData.GhostCube.GetComponent<Renderer>().material;
+        mymat.color = new Color(SampleData.Color.r, SampleData.Color.g, SampleData.Color.b, alpha);
     }
 }

@@ -34,6 +34,7 @@ namespace Assets.Scripts
         public List<ControlEntry> ControlEntries = new List<ControlEntry>();
         public List<Sample2> Samples = new List<Sample2>();
         public LineRenderer LineRenderer;
+        public GameObject GhostCube;
         public Color Color;
     }
 }

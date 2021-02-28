@@ -10,12 +10,21 @@ using UnityEngine.UI;
 public class TMNFViewer : MonoBehaviour
 {
     public GameObject MapBlockTextTemplate;
+    public GameObject GhostCubeTemplate;
+
     public Button BackButton;
     public Button RandomizeColorsButton;
     public GameObject GhostScrollList;
     public Slider LineThicknessSlider;
     public Toggle ShowBlocksToggle;
     public Text TrackNameText;
+
+    public Button PlayButton;
+    public Button PauseButton;
+    public Button StopButton;
+
+    public int PlayerIndex = 0;
+    public bool Playing = false;
 
     public float RightClickSpeedH = 2.0f;
     public float RightClickSpeedV = 2.0f;
@@ -25,6 +34,11 @@ public class TMNFViewer : MonoBehaviour
     {
         DataManager.PreviousScenes.Add(SceneManager.GetActiveScene().name);
 
+        if (DataManager.MoveKeys == null)
+        {
+            DataManager.KeyboardLayoutChanged(PlayerPrefs.GetInt("KeyboardLayout"));
+        }
+
         LineThicknessSlider.value = PlayerPrefs.GetFloat("LineThickness");
 
         BackButton.onClick.AddListener(BackButtonClick);
@@ -33,6 +47,10 @@ public class TMNFViewer : MonoBehaviour
         ShowBlocksToggle.onValueChanged.AddListener(delegate {
             ShowBlocksToggleValueChanged();
         });
+
+        PlayButton.onClick.AddListener(PlayButtonClick);
+        PauseButton.onClick.AddListener(PauseButtonClick);
+        StopButton.onClick.AddListener(StopButtonClick);
 
         GhostListControls ghostListControls = GhostScrollList.GetComponent<GhostListControls>();
 
@@ -67,6 +85,14 @@ public class TMNFViewer : MonoBehaviour
             );
             ghostData.LineRenderer.colorGradient = gradient;
             ghostData.Color = color;
+
+            ghostData.GhostCube = Instantiate(GhostCubeTemplate);
+            ghostData.GhostCube.name = $"GhostCube_{ghostData.PlayerName}";
+            ghostData.GhostCube.transform.position = ghostData.Samples[0].Position;
+            ghostData.GhostCube.transform.eulerAngles = PitchYawRollToEulerAngles(ghostData.Samples[0].PitchYawRoll);
+            Material mymat = ghostData.GhostCube.GetComponent<Renderer>().material;
+            mymat.color = new Color(color.r, color.g, color.b, .5f);
+            ghostData.GhostCube.SetActive(false);
             ghostListControls.AddGhost(ghostData);
         }
 
@@ -85,6 +111,63 @@ public class TMNFViewer : MonoBehaviour
             }
             LoadMapBlocks(posDiff);
         }
+        if (DataManager.TMNFMapGhosts.Count > 0)
+        {
+            TMNFSampleData first = DataManager.TMNFMapGhosts.First();
+            Vector3 pos = first.Samples[0].Position;
+            pos.y += 5;
+            Camera.main.transform.position = pos;
+            Camera.main.transform.eulerAngles = PitchYawRollToEulerAngles(first.Samples[0].PitchYawRoll);
+        }
+        InvokeRepeating("GhostPlayer", 0, .05f);
+    }
+
+    public Vector3 PitchYawRollToEulerAngles(Vector3 pitchYawRoll)
+    {
+        Vector3 ret = new Vector3(
+            pitchYawRoll.x * Mathf.Rad2Deg,
+            pitchYawRoll.y * -Mathf.Rad2Deg,
+            pitchYawRoll.z * Mathf.Rad2Deg);
+        return (ret);
+    }
+    public void GhostPlayer()
+    {
+        if (Playing)
+        {
+            foreach (var ghostData in DataManager.TMNFMapGhosts)
+            {
+                if (ghostData.Samples.Count > PlayerIndex)
+                {
+                    ghostData.GhostCube.transform.position = ghostData.Samples[PlayerIndex].Position;
+                    ghostData.GhostCube.transform.eulerAngles = PitchYawRollToEulerAngles(ghostData.Samples[PlayerIndex].PitchYawRoll);
+                }
+            }
+            PlayerIndex++;
+        }
+    }
+
+    private void StopButtonClick()
+    {
+        foreach (var ghostData in DataManager.TMNFMapGhosts)
+        {
+            ghostData.GhostCube.SetActive(false);
+        }
+        Playing = false;
+        PlayerIndex = 0;
+    }
+
+    private void PauseButtonClick()
+    {
+        Playing = false;
+    }
+
+    private void PlayButtonClick()
+    {
+        foreach (var ghostData in DataManager.TMNFMapGhosts)
+        {
+            ghostData.GhostCube.SetActive(true);
+        }
+        Playing = true;
     }
 
     private void ShowBlocksToggleValueChanged()
@@ -156,6 +239,9 @@ public class TMNFViewer : MonoBehaviour
             );
             ghostData.LineRenderer.colorGradient = gradient;
             ghostData.Color = color;
+
+            Material mymat = ghostData.GhostCube.GetComponent<Renderer>().material;
+            mymat.color = new Color(color.r, color.g, color.b, .5f);
 
             GameObject itemTemplate = ghostListControls.GhostItems.Find(x => x.name == ghostData.PlayerName);
 
