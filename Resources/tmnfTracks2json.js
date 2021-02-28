@@ -20,7 +20,7 @@ for (var i = 0; i < tr2.length; i++) {
 
 for (var i = 0; i < trAll.length; i++) {
     var tds = trAll[i].getElementsByTagName("td");
-    var trackName = tds[0].getElementsByTagName("a")[2].innerText;
+    var trackName = tds[0].getElementsByTagName("a")[2].innerText.replace("'", "");
     var trackId = tds[0].getElementsByTagName("a")[2].href;
     trackId = trackId.split("id=")[1];
     trackId = trackId.split("#")[0];
