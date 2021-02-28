@@ -5,7 +5,7 @@
 
 # TrackmaniaAnalysis
 
-  ![The tool in action](https://i.imgur.com/MRV6vE2.png)
+  ![The tool in action](https://i.imgur.com/Cnxufxn.png)
 
 A unity project for advanced analysis of trackmania replays
 
