@@ -37,7 +37,7 @@ Powered by https://github.com/BigBang1112/gbx-net
 
   
 
-You can play with the WebGL version here: https://bux42.github.io/TrackmaniaAnalysis/WebGL/index.html
+You can play with the WebGL version here (clear your cache to make sure you get the latest version): https://bux42.github.io/TrackmaniaAnalysis/WebGL/index.html
 
   
 
