@@ -645,6 +645,10 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled:
+    Build: 0
+    Collab: 0
+    ErrorHub: 0
+    Hub: 0
     UNet: 1
   luminIcon:
     m_Name: 
@@ -658,10 +662,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 70ddf2a3-a229-4ad4-9d7c-307062a8d97e
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: TrackmaniaAnalysis
+  organizationId: 034e322-517c-492d-a10b-50f3594a622d
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
