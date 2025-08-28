@@ -2,6 +2,8 @@
 
 Hi! Here is where I host some of my web based projects that I want to share
 
+You can find the home page [here](https://bux42.github.io/)
+
 ## Projects
 
 # Monte carlo tree search visualizer
